@@ -23,3 +23,5 @@ erl_crash.dump
 paddy-*.tar
 
 elixir_ls
+
+/config/google-pub-sub-fake-data.json
