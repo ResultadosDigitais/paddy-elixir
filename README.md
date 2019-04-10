@@ -9,7 +9,7 @@ Add the `paddy` lib to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:paddy, "0.1.0", git: "https://github.com/ResultadosDigitais/paddy-elixir"}
+    {:paddy, "0.1.0", git: "https://github.com/ResultadosDigitais/paddy-elixir.git"}
   ]
 end
 ```
