@@ -22,13 +22,13 @@ defmodule Paddy.MixProject do
   defp deps do
     [
       # Pubsub integration
-      {:google_api_pub_sub, "~> 0.4.0"},
+      {:google_api_pub_sub, "~> 0.4"},
 
       # Auth with google cloud platform
-      {:goth, "~> 1.0.1"},
+      {:goth, "~> 1.0"},
 
       # Mock dependencies
-      {:mock, "~> 0.3.1", only: :test}
+      {:mock, "~> 0.3", only: :test}
     ]
   end
 end
