@@ -9,7 +9,7 @@ Add the `paddy` lib to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:paddy, "0.1.0", git: "https://github.com/ResultadosDigitais/paddy-elixir"}
+    {:paddy, github: "lccezinha/paddy-elixir", tag: "0.1.0"}
   ]
 end
 ```
@@ -33,24 +33,20 @@ Once you download your `credentials.json` file you are ready to set all configur
 ### Development/Test environment
 
 - Inside `YOUR_APP_LIB/config` copy or create a new `json` file with the same content of `credentials.json`
-- In the `app/config/dev.exs` and `app/config/test.exs` post the code:
+- In the `app/config/dev.exs` and `app/config/test.exs` put the code:
 
 ```elixir
 config :goth,
   json: "#{Path.dirname(__DIR__)}/config/YOUR_CREDENTIALS_FILE.json" |> File.read!()
 ```
 
-```elixir
-alias Paddy
-
-Paddy.publish(data)
-```
-
 ### Production/Staging enviroment
 
-You can follow the [Goth documentation](https://github.com/peburrows/goth#goth) and config the `goth` lib as you want.
+First you need to set the `goth` configuration properly. You can follow the [Goth documentation](https://github.com/peburrows/goth#goth) and config the `goth` lib as you want.
 
 You need to set the `paddy` configuration for `project_id` and `topic_id` that will be used internally to publish data to the given topic.
+
+- In the `YOUR_APP_LIB/config/staging.exs` and `YOUR_APP_LIB/config/prod.exs` put the code:
 
 ```elixir
 config :paddy,
@@ -60,7 +56,9 @@ config :paddy,
 
 ### Using
 
-See an example of how to use Paddy.
+> The lib is only responsible to receive the data and publish it to the previously set project_id/topic_id, the list IS NOT responsible to transform and mount the format, this step must be done by the application that will use `paddy`.
+
+See an example of how to use Paddy in the `iex` console.
 
 ```elixir
 iex> version = :v1
@@ -80,12 +78,12 @@ iex> data = %{
   event_identifier: payload[:id],
   event_timestamp: event_timestamp,
   tenant_id: company_id,
-  event_family: "DATALAKE",
+  event_family: "SOME_FAMILY",
   payload: payload
 }
 iex> alias Paddy
 iex> Paddy.publish(data)
-iex> {:ok,%GoogleApi.PubSub.V1.Model.PublishResponse{messageIds: ["422315144637561"]}}
+iex> {:ok,%GoogleApi.PubSub.V1.Model.PublishResponse{messageIds: ["SOME_MESSAGE_ID"]}}
 ```
 
 ### Development
