@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: paddy-elixir
+  annotations:
+    github.com/project-slug: ResultadosDigitais/paddy-elixir
+spec:
+  type: library
+  lifecycle: production
+  owner: devtools
