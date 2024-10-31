@@ -41,12 +41,14 @@ defmodule Paddy do
       iex> {:ok,%GoogleApi.PubSub.V1.Model.PublishResponse{messageIds: ["422315144637561"]}}
   """
 
-  def publish(data) do
+  def publish(data, args \\ []) do
+    project_id = Keyword.get(args, :project_id, @project_id)
+    topic_id = Keyword.get(args, :topic_id, @topic_id)
     encoded_data = encode_data(data)
     message = %Model.PubsubMessage{data: encoded_data}
     data_request = %Model.PublishRequest{messages: [message]}
 
-    Projects.pubsub_projects_topics_publish(get_connection(), @project_id, @topic_id,
+    Projects.pubsub_projects_topics_publish(get_connection(), project_id, topic_id,
       body: data_request
     )
   end
