@@ -69,7 +69,7 @@ defmodule Paddy do
   #
   # Link for the doc: https://github.com/peburrows/goth/blob/master/lib/goth/token.ex#L3
   defp get_connection(client_email) do
-    {:ok, token} = Goth.Token.for_scope("https://www.googleapis.com/auth/pubsub", client_email)
+    {:ok, token} = Goth.Token.for_scope({client_email, "https://www.googleapis.com/auth/pubsub"})
 
     token
     |> Map.get(:token)
