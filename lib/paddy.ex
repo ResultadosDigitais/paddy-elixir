@@ -44,11 +44,13 @@ defmodule Paddy do
   def publish(data, args \\ []) do
     project_id = Keyword.get(args, :project_id, @project_id)
     topic_id = Keyword.get(args, :topic_id, @topic_id)
+    client_email = Keyword.get(args, :client_email)
+
     encoded_data = encode_data(data)
     message = %Model.PubsubMessage{data: encoded_data}
     data_request = %Model.PublishRequest{messages: [message]}
 
-    Projects.pubsub_projects_topics_publish(get_connection(), project_id, topic_id,
+    Projects.pubsub_projects_topics_publish(get_connection(client_email), project_id, topic_id,
       body: data_request
     )
   end
@@ -66,8 +68,8 @@ defmodule Paddy do
   # We are currently using the lib in version 1.0.1 ~ 27/03/2019.
   #
   # Link for the doc: https://github.com/peburrows/goth/blob/master/lib/goth/token.ex#L3
-  defp get_connection do
-    {:ok, token} = Goth.Token.for_scope("https://www.googleapis.com/auth/pubsub")
+  defp get_connection(client_email) do
+    {:ok, token} = Goth.Token.for_scope("https://www.googleapis.com/auth/pubsub", client_email)
 
     token
     |> Map.get(:token)
