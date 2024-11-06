@@ -20,11 +20,16 @@ defmodule PaddyTest do
         event_timestamp: event_timestamp,
         payload: payload
       }
-      with_mock Projects,
-        pubsub_projects_topics_publish: fn _connection, _project_id, _topic_id, _params -> :ok end do
+
+      with_mocks [
+        {Projects, [], pubsub_projects_topics_publish: fn _connection, _project_id, _topic_id, _params -> :ok end},
+        {Goth.Token, [], for_scope: fn _ -> {:ok, %{token: "mocked_token"}} end}
+      ] do
         Paddy.publish(params)
 
-        assert called(Projects.pubsub_projects_topics_publish(:_, :_, :_, :_))
+        assert called(
+          Projects.pubsub_projects_topics_publish(:_, :_, :_, :_)
+        )
       end
     end
 
@@ -42,11 +47,16 @@ defmodule PaddyTest do
         event_timestamp: event_timestamp,
         payload: payload
       }
-      with_mock Projects,
-        pubsub_projects_topics_publish: fn _connection, _project_id, _topic_id, _params -> :ok end do
-        Paddy.publish(params, project_id: "custom_project_id", topic_id: "custom_topic_id")
 
-        assert called(Projects.pubsub_projects_topics_publish(:_, :_, :_, :_))
+      with_mocks [
+        {Projects, [], pubsub_projects_topics_publish: fn _connection, _project_id, _topic_id, _params -> :ok end},
+        {Goth.Token, [], for_scope: fn _ -> {:ok, %{token: "mocked_token"}} end}
+      ] do
+        Paddy.publish(params, project_id: "custom_project_id", topic_id: "custom_topic_id", client_email: "custom_email")
+
+        assert called(
+          Projects.pubsub_projects_topics_publish(:_, :_, :_, :_)
+        )
       end
     end
   end
