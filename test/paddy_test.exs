@@ -39,7 +39,7 @@ defmodule PaddyTest do
       event_type = "foobar_event"
       payload = %{id: 1, name: "foobar"}
       event_timestamp = ~N[2018-08-01 22:15:07]
-
+    
       params = %{
         version: version,
         company_id: company_id,
@@ -47,17 +47,23 @@ defmodule PaddyTest do
         event_timestamp: event_timestamp,
         payload: payload
       }
-
+    
       with_mocks [
-        {Projects, [], pubsub_projects_topics_publish: fn _connection, _project_id, _topic_id, _params -> :ok end},
+        {Projects, [], pubsub_projects_topics_publish: fn _connection, project_id, topic_id, options ->
+          assert project_id == "custom_project_id"
+          assert topic_id == "custom_topic_id"
+
+          publish_request = Keyword.get(options, :body)
+      
+          assert %GoogleApi.PubSub.V1.Model.PublishRequest{
+                    messages: [%GoogleApi.PubSub.V1.Model.PubsubMessage{data: _}]
+                  } = publish_request
+          :ok
+        end},
         {Goth.Token, [], for_scope: fn _ -> {:ok, %{token: "mocked_token"}} end}
       ] do
-        Paddy.publish(params, project_id: "custom_project_id", topic_id: "custom_topic_id", client_email: "custom_email")
-
-        assert called(
-          Projects.pubsub_projects_topics_publish(:_, :_, :_, :_)
-        )
-      end
-    end
+        Paddy.publish(params, project_id: "custom_project_id", topic_id: "custom_topic_id", client_email: "custom_client_email")
+      end      
+    end    
   end
 end
