@@ -55,10 +55,10 @@ defmodule Paddy do
     )
   end
 
-  defp encode_data(data) do
-    {:ok, encoded_data} = Poison.encode(data)
-    Base.encode64(encoded_data)
-  end
+  # defp encode_data(data) do
+  #   {:ok, encoded_data} = Poison.encode(data)
+  #   Base.encode64(encoded_data)
+  # end
 
   ### Disclaimer!
   #
