@@ -46,8 +46,8 @@ defmodule Paddy do
     topic_id = Keyword.get(args, :topic_id, @topic_id)
     client_email = Keyword.get(args, :client_email)
 
-    encoded_data = encode_data(data)
-    message = %Model.PubsubMessage{data: encoded_data}
+    #encoded_data = encode_data(data)
+    message = %Model.PubsubMessage{data: data}
     data_request = %Model.PublishRequest{messages: [message]}
 
     Projects.pubsub_projects_topics_publish(get_connection(client_email), project_id, topic_id,
