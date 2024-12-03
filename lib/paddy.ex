@@ -45,8 +45,9 @@ defmodule Paddy do
     project_id = Keyword.get(args, :project_id, @project_id)
     topic_id = Keyword.get(args, :topic_id, @topic_id)
     client_email = Keyword.get(args, :client_email)
+    version = Keyword.get(args, :version, :v1)
 
-    encoded_data = encode_data(data)
+    encoded_data = encode_data(data, version)
     message = %Model.PubsubMessage{data: encoded_data}
     data_request = %Model.PublishRequest{messages: [message]}
 
@@ -55,10 +56,18 @@ defmodule Paddy do
     )
   end
 
-  defp encode_data(data) do
-    # {:ok, encoded_data} = Poison.encode(data)
-    Base.encode64(data)
+  defp encode_data(data, version) do
+    case version do
+      :v1 ->
+        {:ok, encoded_data} = Poison.encode(data)
+        Base.encode64(encoded_data)
+      :v2 ->
+        Base.encode64(data)
+      _ ->
+        raise ArgumentError, "Unsupported version: #{inspect(version)}"
+    end
   end
+  
 
   ### Disclaimer!
   #

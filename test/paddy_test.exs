@@ -67,6 +67,6 @@ defmodule PaddyTest do
       ] do
         Paddy.publish(params, project_id: "custom_project_id", topic_id: "custom_topic_id", client_email: "custom_client_email")
       end      
-    end    
+    end
   end
 end
